@@ -1,0 +1,41 @@
+{
+  "name": "stake-sync-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@mediapipe/tasks-vision": "^1.1.0",
+    "@privy-io/react-auth": "3.45.0",
+    "@solana-program/memo": "0.12.0",
+    "@solana-program/system": "0.13.0",
+    "@solana-program/token": "0.15.0",
+    "@solana/wallet-adapter-base": "^0.9.28",
+    "@solana/wallet-adapter-react": "^0.15.40",
+    "@solana/web3.js": "^1.99.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "bs58": "^6.0.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.53.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router": "^8.4.0",
+    "socket.io-client": "^4.8.4",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

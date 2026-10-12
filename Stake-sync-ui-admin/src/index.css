@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  /* OKLCH: perceptual lightness keeps tints and states even across hues.
+     src/lib/tokens.ts mirrors the few colors GSAP tweens. */
+  --color-ground: oklch(96.3% 0.005 258.3);
+  --color-surface: oklch(100% 0 0);
+  --color-ink: oklch(21.3% 0.028 274.5);
+  --color-slate: oklch(50% 0.03 268.5);
+  --color-line: oklch(90.6% 0.012 264.5);
+  --color-tile: oklch(92.7% 0.01 261.8);
+  --color-cobalt: oklch(53% 0.243 266.2);
+  --color-cobalt-deep: oklch(43.8% 0.212 266.3);
+  --color-cobalt-soft: oklch(93.6% 0.03 273.6);
+  --color-gold: oklch(76.4% 0.159 78.8);
+  --color-gold-ink: oklch(50.8% 0.108 73.3);
+  --color-gold-soft: oklch(96.2% 0.051 91.4);
+  --color-miss: oklch(61.5% 0.19 23);
+  --color-miss-soft: oklch(94.6% 0.024 17.6);
+  --color-calm: oklch(56.3% 0.119 158.9);
+  --color-calm-soft: oklch(94.7% 0.025 164.4);
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-lift: 0 1px 0 oklch(21.3% 0.028 274.5 / 0.04), 0 8px 24px -12px oklch(21.3% 0.028 274.5 / 0.18);
+  --shadow-sheet: 0 -1px 0 oklch(21.3% 0.028 274.5 / 0.06), 0 24px 64px -16px oklch(21.3% 0.028 274.5 / 0.35);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ground text-ink font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--color-cobalt-soft);
+  }
+  /* Grid columns may shrink below their content, so wide tables scroll inside their panel
+     instead of pushing the page sideways on phones. */
+  .grid > * {
+    min-width: 0;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Hatched tile: verification provider was down, never counted against you */
+  .tile-hatch {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--color-tile) 0 4px,
+      color-mix(in oklch, var(--color-slate) 22%, var(--color-tile)) 4px 6px
+    );
+  }
+  .tile-pending {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--color-cobalt-soft) 0 4px,
+      color-mix(in oklch, var(--color-cobalt) 22%, var(--color-cobalt-soft)) 4px 6px
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Skeleton shimmer; static under reduced motion */
+@keyframes bone-sheen {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+.bone {
+  background-color: var(--color-tile);
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in oklch, white 55%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: bone-sheen 1.4s ease-in-out infinite;
+}
+.bone-dark {
+  background-color: color-mix(in oklch, white 10%, transparent);
+  background-image: linear-gradient(100deg, transparent 30%, color-mix(in oklch, white 10%, transparent) 50%, transparent 70%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bone {
+    animation: none;
+    background-image: none;
+  }
+}
+
+/* Long-form legal text */
+.legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.legal li + li {
+  margin-top: 0.5rem;
+}
+.legal li::marker {
+  color: var(--color-slate);
+}
+.legal a {
+  color: var(--color-cobalt);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+.legal a:hover {
+  text-decoration: underline;
+}
+
+/* Busy state for buttons and rows: instant feedback, no spinner */
+@keyframes busy-sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.is-busy {
+  position: relative;
+  pointer-events: none;
+}
+.is-busy::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: linear-gradient(100deg, transparent 30%, color-mix(in oklch, white 35%, transparent) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: busy-sheen 1.1s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-busy::after {
+    animation: none;
+    background-image: none;
+    background-color: color-mix(in oklch, white 18%, transparent);
+  }
+}
+
+/* Quiet scrollbars for side panels */
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--color-slate) 30%, transparent) transparent;
+}
+.scroll-quiet::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-quiet::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: color-mix(in oklch, var(--color-slate) 30%, transparent);
+}

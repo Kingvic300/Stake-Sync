@@ -1,0 +1,1806 @@
+{
+  "address": "ANKCFRDYu45J199F1teNEeCiRUC7xYRArMtiHRYkvAcV",
+  "metadata": {
+    "name": "stake_sync",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Stake-Sync commitment challenge escrow"
+  },
+  "instructions": [
+    {
+      "name": "initialize_config",
+      "discriminator": [
+        208,
+        127,
+        21,
+        1,
+        194,
+        190,
+        196,
+        70
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "usdc_mint"
+        },
+        {
+          "name": "program"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "verifier",
+          "type": "pubkey"
+        },
+        {
+          "name": "treasury",
+          "type": "pubkey"
+        },
+        {
+          "name": "fees",
+          "type": {
+            "defined": {
+              "name": "Fees"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_config",
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "update",
+          "type": {
+            "defined": {
+              "name": "ConfigUpdate"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_challenge",
+      "discriminator": [
+        170,
+        244,
+        47,
+        1,
+        1,
+        15,
+        173,
+        239
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "docs": [
+            "Holds every stake and sponsor deposit. Owned by the challenge PDA, so only this",
+            "program's rules can move funds out of it."
+          ],
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "u64"
+        },
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "ChallengeArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "sponsor",
+      "discriminator": [
+        178,
+        108,
+        177,
+        165,
+        239,
+        218,
+        13,
+        127
+      ],
+      "accounts": [
+        {
+          "name": "sponsor",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "sponsorship",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "sponsor_token",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "cancel_challenge",
+      "discriminator": [
+        231,
+        253,
+        0,
+        151,
+        179,
+        94,
+        5,
+        152
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "join",
+      "discriminator": [
+        206,
+        55,
+        2,
+        106,
+        113,
+        220,
+        17,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "user_token",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "stake",
+          "type": "u64"
+        },
+        {
+          "name": "accepted_rules_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "use_freeze",
+      "discriminator": [
+        63,
+        143,
+        171,
+        67,
+        242,
+        183,
+        104,
+        45
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "first_period",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "open_dispute",
+      "discriminator": [
+        137,
+        25,
+        99,
+        119,
+        23,
+        223,
+        161,
+        42
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "period",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "record_period",
+      "discriminator": [
+        188,
+        142,
+        59,
+        160,
+        10,
+        236,
+        57,
+        98
+      ],
+      "accounts": [
+        {
+          "name": "verifier",
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "period",
+          "type": "u16"
+        },
+        {
+          "name": "outcome",
+          "type": {
+            "defined": {
+              "name": "Outcome"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "resolve_dispute",
+      "discriminator": [
+        231,
+        6,
+        202,
+        6,
+        96,
+        103,
+        12,
+        230
+      ],
+      "accounts": [
+        {
+          "name": "verifier",
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "period",
+          "type": "u16"
+        },
+        {
+          "name": "upheld",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "settle_participant",
+      "discriminator": [
+        44,
+        163,
+        161,
+        153,
+        239,
+        59,
+        40,
+        4
+      ],
+      "accounts": [
+        {
+          "name": "cranker",
+          "docs": [
+            "Anyone can crank settlement; the outcome is fully determined by recorded results."
+          ],
+          "signer": true
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "participant",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finalize",
+      "discriminator": [
+        171,
+        61,
+        218,
+        56,
+        127,
+        115,
+        12,
+        217
+      ],
+      "accounts": [
+        {
+          "name": "cranker",
+          "signer": true
+        },
+        {
+          "name": "config"
+        },
+        {
+          "name": "challenge",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "treasury_token",
+          "docs": [
+            "Must belong to the configured treasury wallet."
+          ],
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim",
+      "discriminator": [
+        62,
+        198,
+        214,
+        193,
+        213,
+        159,
+        108,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "challenge"
+        },
+        {
+          "name": "participant",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "user_token",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "refund_cancelled",
+      "discriminator": [
+        103,
+        244,
+        158,
+        83,
+        225,
+        80,
+        56,
+        62
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "challenge"
+        },
+        {
+          "name": "participant",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "user_token",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "reclaim_sponsorship",
+      "discriminator": [
+        12,
+        191,
+        46,
+        60,
+        198,
+        100,
+        209,
+        198
+      ],
+      "accounts": [
+        {
+          "name": "sponsor",
+          "signer": true
+        },
+        {
+          "name": "challenge"
+        },
+        {
+          "name": "sponsorship",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "vault",
+          "writable": true
+        },
+        {
+          "name": "sponsor_token",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Challenge",
+      "discriminator": [
+        119,
+        250,
+        161,
+        121,
+        119,
+        81,
+        22,
+        208
+      ]
+    },
+    {
+      "name": "Config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    },
+    {
+      "name": "Participant",
+      "discriminator": [
+        32,
+        142,
+        108,
+        79,
+        247,
+        179,
+        54,
+        6
+      ]
+    },
+    {
+      "name": "Sponsorship",
+      "discriminator": [
+        191,
+        110,
+        48,
+        7,
+        9,
+        44,
+        168,
+        248
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "ChallengeCreated",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "rules_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "ChallengeFinalized",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "finishers",
+            "type": "u32"
+          },
+          {
+            "name": "reward_per_finisher",
+            "type": "u64"
+          },
+          {
+            "name": "treasury",
+            "type": "u64"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Claimed",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "DisputeOpened",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "period",
+            "type": "u16"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "DisputeResolved",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "period",
+            "type": "u16"
+          },
+          {
+            "name": "upheld",
+            "type": "bool"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "FreezeUsed",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "first_period",
+            "type": "u16"
+          },
+          {
+            "name": "periods",
+            "type": "u8"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Joined",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake",
+            "type": "u64"
+          },
+          {
+            "docs": [
+              "Joining fee paid to the treasury on top of the stake."
+            ],
+            "name": "fee",
+            "type": "u64"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "ParticipantSettled",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "completed",
+            "type": "bool"
+          },
+          {
+            "name": "penalty",
+            "type": "u64"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "PeriodRecorded",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "period",
+            "type": "u16"
+          },
+          {
+            "name": "outcome",
+            "type": {
+              "defined": {
+                "name": "Outcome"
+              }
+            }
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Sponsored",
+      "type": {
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "sponsor",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "ConfigUpdate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "verifier",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "treasury",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "fees",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "Fees"
+                }
+              }
+            }
+          },
+          {
+            "name": "paused",
+            "type": {
+              "option": "bool"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Fees",
+      "docs": [
+        "Platform fees in basis points (100 = 1%)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "forfeit_bps",
+            "docs": [
+              "Platform's share of forfeited stakes and penalties (the rest goes to finishers)."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "join_bps",
+            "docs": [
+              "On top of each stake when joining."
+            ],
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Challenge",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "rules_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "stake_min",
+            "type": "u64"
+          },
+          {
+            "name": "stake_max",
+            "type": "u64"
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "period_secs",
+            "type": "u32"
+          },
+          {
+            "name": "period_count",
+            "type": "u16"
+          },
+          {
+            "name": "required_periods",
+            "type": "u16"
+          },
+          {
+            "name": "join_deadline",
+            "type": "i64"
+          },
+          {
+            "name": "dispute_window_secs",
+            "type": "u32"
+          },
+          {
+            "name": "free_strikes",
+            "type": "u8"
+          },
+          {
+            "name": "penalty_bps",
+            "type": {
+              "array": [
+                "u16",
+                3
+              ]
+            }
+          },
+          {
+            "name": "freeze_periods",
+            "type": "u8"
+          },
+          {
+            "name": "max_participants",
+            "type": "u32"
+          },
+          {
+            "name": "forfeits_to_finishers",
+            "type": "bool"
+          },
+          {
+            "name": "fee_bps",
+            "docs": [
+              "Copied from Config at creation, so later fee changes never touch running challenges."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "join_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "ChallengeStatus"
+              }
+            }
+          },
+          {
+            "name": "participant_count",
+            "type": "u32"
+          },
+          {
+            "name": "total_staked",
+            "type": "u64"
+          },
+          {
+            "name": "join_fees",
+            "docs": [
+              "Joining fees held in the vault; paid to the treasury at finalize, refunded on cancel."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "sponsor_pool",
+            "type": "u64"
+          },
+          {
+            "name": "open_disputes",
+            "type": "u32"
+          },
+          {
+            "name": "settled_count",
+            "type": "u32"
+          },
+          {
+            "name": "finisher_count",
+            "type": "u32"
+          },
+          {
+            "name": "forfeited_total",
+            "type": "u64"
+          },
+          {
+            "name": "reward_per_finisher",
+            "type": "u64"
+          },
+          {
+            "name": "treasury_amount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChallengeArgs",
+      "docs": [
+        "Rules a creator picks when creating a challenge. Locked once created."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "rules_hash",
+            "docs": [
+              "sha256 of the full off-chain rules document participants accept."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "stake_min",
+            "docs": [
+              "Equal min and max means a fixed stake; both zero means no stake."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "stake_max",
+            "type": "u64"
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "period_secs",
+            "type": "u32"
+          },
+          {
+            "name": "period_count",
+            "type": "u16"
+          },
+          {
+            "name": "required_periods",
+            "type": "u16"
+          },
+          {
+            "name": "join_deadline",
+            "type": "i64"
+          },
+          {
+            "name": "dispute_window_secs",
+            "type": "u32"
+          },
+          {
+            "name": "free_strikes",
+            "type": "u8"
+          },
+          {
+            "name": "penalty_bps",
+            "docs": [
+              "Extra share of the stake lost on each miss after the free strikes, in basis points.",
+              "The last value repeats for further misses."
+            ],
+            "type": {
+              "array": [
+                "u16",
+                3
+              ]
+            }
+          },
+          {
+            "name": "freeze_periods",
+            "type": "u8"
+          },
+          {
+            "name": "max_participants",
+            "docs": [
+              "0 means unlimited."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "forfeits_to_finishers",
+            "docs": [
+              "Share forfeited stakes with finishers; otherwise they go to the treasury."
+            ],
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChallengeStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Open"
+          },
+          {
+            "name": "Settled"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "docs": [
+        "Platform settings. The admin governs settings and the verifier key, but nothing here",
+        "lets any key move escrowed funds (PRD \u00a717, \u00a729)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "verifier",
+            "docs": [
+              "Backend key that records verification results. Should be a multisig or HSM-held key."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Wallet that receives the platform fee and undistributed forfeits."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "usdc_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "docs": [
+              "Platform's share of forfeited stakes and penalties; finishers split the rest."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "join_fee_bps",
+            "docs": [
+              "Fee charged on top of each stake when joining."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Stops new challenges and new joins. Running challenges, claims and refunds keep working."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Outcome",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Verified"
+          },
+          {
+            "name": "Missed"
+          },
+          {
+            "name": "Excused"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Participant",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake",
+            "type": "u64"
+          },
+          {
+            "name": "join_fee",
+            "docs": [
+              "Joining fee paid on top of the stake."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "joined_at",
+            "type": "i64"
+          },
+          {
+            "name": "verified",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "missed",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "excused",
+            "docs": [
+              "Provider was down: protected, can never become a miss."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "frozen",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "disputed",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "verified_count",
+            "type": "u16"
+          },
+          {
+            "name": "missed_count",
+            "type": "u16"
+          },
+          {
+            "name": "open_disputes",
+            "type": "u8"
+          },
+          {
+            "name": "freeze_used",
+            "type": "bool"
+          },
+          {
+            "name": "settled",
+            "type": "bool"
+          },
+          {
+            "name": "completed",
+            "type": "bool"
+          },
+          {
+            "name": "penalty",
+            "type": "u64"
+          },
+          {
+            "name": "claimed",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Sponsorship",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "challenge",
+            "type": "pubkey"
+          },
+          {
+            "name": "sponsor",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "reclaimed",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Paused",
+      "msg": "New challenges and joins are paused"
+    },
+    {
+      "code": 6001,
+      "name": "NotUpgradeAuthority",
+      "msg": "Only the program upgrade authority can initialize"
+    },
+    {
+      "code": 6002,
+      "name": "FeeTooHigh",
+      "msg": "Fee is above the 10% cap"
+    },
+    {
+      "code": 6003,
+      "name": "WrongMint",
+      "msg": "Token mint is not the platform's USDC mint"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidRules",
+      "msg": "Challenge rules are invalid"
+    },
+    {
+      "code": 6005,
+      "name": "StartInPast",
+      "msg": "Challenge must start in the future"
+    },
+    {
+      "code": 6006,
+      "name": "NotOpen",
+      "msg": "This challenge is no longer open"
+    },
+    {
+      "code": 6007,
+      "name": "JoinClosed",
+      "msg": "Joining has closed for this challenge"
+    },
+    {
+      "code": 6008,
+      "name": "ChallengeFull",
+      "msg": "This challenge is full"
+    },
+    {
+      "code": 6009,
+      "name": "StakeOutOfRange",
+      "msg": "Stake is outside this challenge's range"
+    },
+    {
+      "code": 6010,
+      "name": "RulesMismatch",
+      "msg": "Accepted rules don't match this challenge's rules"
+    },
+    {
+      "code": 6011,
+      "name": "NotVerifier",
+      "msg": "Only the verifier can record results"
+    },
+    {
+      "code": 6012,
+      "name": "PeriodOutOfRange",
+      "msg": "Period is outside the challenge"
+    },
+    {
+      "code": 6013,
+      "name": "PeriodNotOver",
+      "msg": "Results for this period can't be recorded until it ends"
+    },
+    {
+      "code": 6014,
+      "name": "AlreadyRecorded",
+      "msg": "This period already has a final result"
+    },
+    {
+      "code": 6015,
+      "name": "PeriodProtected",
+      "msg": "This period is protected and can't be marked missed"
+    },
+    {
+      "code": 6016,
+      "name": "FreezeUnavailable",
+      "msg": "Freezes aren't allowed or have been used"
+    },
+    {
+      "code": 6017,
+      "name": "FreezeInvalid",
+      "msg": "A freeze must start in a future period and not cover a missed one"
+    },
+    {
+      "code": 6018,
+      "name": "NotDisputable",
+      "msg": "Only a missed period can be disputed"
+    },
+    {
+      "code": 6019,
+      "name": "DisputeWindowClosed",
+      "msg": "The dispute window for this period has closed"
+    },
+    {
+      "code": 6020,
+      "name": "AlreadyDisputed",
+      "msg": "This period is already under dispute"
+    },
+    {
+      "code": 6021,
+      "name": "NotDisputed",
+      "msg": "This period isn't under dispute"
+    },
+    {
+      "code": 6022,
+      "name": "TooEarlyToSettle",
+      "msg": "Settlement hasn't opened yet"
+    },
+    {
+      "code": 6023,
+      "name": "DisputesOpen",
+      "msg": "Disputes are still open"
+    },
+    {
+      "code": 6024,
+      "name": "AlreadySettled",
+      "msg": "Participant already settled"
+    },
+    {
+      "code": 6025,
+      "name": "NotAllSettled",
+      "msg": "Not every participant has settled yet"
+    },
+    {
+      "code": 6026,
+      "name": "NotSettled",
+      "msg": "Claims aren't open"
+    },
+    {
+      "code": 6027,
+      "name": "AlreadyClaimed",
+      "msg": "Already claimed"
+    },
+    {
+      "code": 6028,
+      "name": "NothingToClaim",
+      "msg": "Nothing to claim"
+    },
+    {
+      "code": 6029,
+      "name": "TooLateToCancel",
+      "msg": "A challenge can only be cancelled before it starts"
+    },
+    {
+      "code": 6030,
+      "name": "NotAllowedToCancel",
+      "msg": "Only the creator or admin can cancel"
+    },
+    {
+      "code": 6031,
+      "name": "NotCancelled",
+      "msg": "Challenge isn't cancelled"
+    },
+    {
+      "code": 6032,
+      "name": "CannotReclaim",
+      "msg": "Sponsorship can only be reclaimed when nobody finished or the challenge was cancelled"
+    },
+    {
+      "code": 6033,
+      "name": "ZeroAmount",
+      "msg": "Amount must be greater than zero"
+    },
+    {
+      "code": 6034,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "events": [
+    {
+      "discriminator": [
+        166,
+        178,
+        174,
+        178,
+        11,
+        172,
+        98,
+        243
+      ],
+      "name": "ChallengeCreated"
+    },
+    {
+      "discriminator": [
+        190,
+        192,
+        111,
+        18,
+        82,
+        126,
+        97,
+        230
+      ],
+      "name": "ChallengeFinalized"
+    },
+    {
+      "discriminator": [
+        217,
+        192,
+        123,
+        72,
+        108,
+        150,
+        248,
+        33
+      ],
+      "name": "Claimed"
+    },
+    {
+      "discriminator": [
+        239,
+        222,
+        102,
+        235,
+        193,
+        85,
+        1,
+        214
+      ],
+      "name": "DisputeOpened"
+    },
+    {
+      "discriminator": [
+        121,
+        64,
+        249,
+        153,
+        139,
+        128,
+        236,
+        187
+      ],
+      "name": "DisputeResolved"
+    },
+    {
+      "discriminator": [
+        58,
+        88,
+        26,
+        101,
+        91,
+        126,
+        106,
+        223
+      ],
+      "name": "FreezeUsed"
+    },
+    {
+      "discriminator": [
+        16,
+        20,
+        44,
+        48,
+        132,
+        189,
+        68,
+        98
+      ],
+      "name": "Joined"
+    },
+    {
+      "discriminator": [
+        20,
+        0,
+        26,
+        47,
+        1,
+        212,
+        159,
+        104
+      ],
+      "name": "ParticipantSettled"
+    },
+    {
+      "discriminator": [
+        67,
+        142,
+        118,
+        33,
+        98,
+        139,
+        49,
+        16
+      ],
+      "name": "PeriodRecorded"
+    },
+    {
+      "discriminator": [
+        13,
+        53,
+        40,
+        13,
+        165,
+        80,
+        85,
+        131
+      ],
+      "name": "Sponsored"
+    }
+  ]
+}

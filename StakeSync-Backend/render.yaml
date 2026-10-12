@@ -1,0 +1,118 @@
+# Render Blueprint: Dashboard > New > Blueprint > pick this repo. Render asks for every value marked
+# `sync: false` (secrets and keys); see the setup guide for where each one comes from.
+# Starter (always on) is required: the free plan sleeps after 15 minutes, which stops verification,
+# settlement and the other background jobs.
+services:
+  - type: web
+    name: stakesync-api
+    runtime: node
+    plan: starter
+    region: frankfurt # closest Render region to West Africa
+    branch: main
+    # Dev dependencies (Nest CLI, TypeScript) are needed to build even though NODE_ENV is production.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: node dist/main
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      # Migrations run on boot; never sync the schema in production.
+      - key: DB_SYNC
+        value: "false"
+      - key: DATABASE_URL
+        sync: false
+
+      # Where the apps live
+      - key: APP_URL
+        value: https://stake-sync-ui.vercel.app
+      - key: ADMIN_URL
+        value: https://stake-sync-ui-admin.vercel.app
+      - key: CORS_ORIGINS
+        value: https://stake-sync-ui.vercel.app,https://stake-sync-ui-admin.vercel.app
+      - key: API_URL
+        sync: false # e.g. https://stakesync-api.onrender.com (no trailing slash, no /api)
+
+      # Secrets Render generates for you (random, 256-bit, base64)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: WALLET_AUTH_PRIVATE_KEY
+        sync: false
+
+      # Admin safety
+      - key: ADMIN_REQUIRE_2FA
+        value: "true"
+      - key: ADMIN_IP_ALLOWLIST
+        sync: false
+
+      # Sign-in and connections
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: WAKATIME_CLIENT_ID
+        sync: false
+      - key: WAKATIME_CLIENT_SECRET
+        sync: false
+
+      # Solana
+      - key: SOLANA_CLUSTER
+        value: mainnet-beta
+      - key: SOLANA_RPC_URL
+        sync: false
+      - key: SOLANA_WS_URL
+        sync: false
+      - key: TREASURY_WALLET
+        sync: false
+      - key: PLATFORM_SECRET_KEY
+        sync: false
+      - key: VERIFIER_SECRET_KEY
+        sync: false
+      # Only one instance may run the chain jobs (see backend issue #2)
+      - key: CHAIN_WORKERS
+        value: "true"
+
+      # Local currency (Onramper)
+      # LocalRamp (default local-currency provider once its public key is set)
+      - key: LOCALRAMP_PUBLIC_KEY
+        sync: false
+      - key: LOCALRAMP_SECRET_KEY
+        sync: false
+      - key: LOCALRAMP_WEBHOOK_TOKEN
+        sync: false
+      # Onramper (alternative; used when LocalRamp isn't set up)
+      - key: ONRAMPER_API_KEY
+        sync: false
+      - key: ONRAMPER_SIGNING_KEY
+        sync: false
+      - key: ONRAMPER_DEFAULT_FIAT
+        value: NGN
+      # Turn on once the webhook is registered with Onramper (docs/onramper.md)
+      - key: ONRAMPER_WEBHOOKS_ENABLED
+        value: "false"
+      - key: ONRAMPER_WEBHOOK_SECRET
+        sync: false
+
+      # Email and push
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false # e.g. Stake-Sync <hello@yourdomain.com>, a sender verified in Brevo
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+
+      # Uploads (Cloudinary free plan). Render's disk is wiped on every deploy, so production needs this.
+      - key: CLOUDINARY_URL
+        sync: false # cloudinary://API_KEY:API_SECRET@CLOUD_NAME
